@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
+
 
 
 
@@ -19,6 +19,7 @@ public class Door : MonoBehaviour
         public bool isDoorOpen;
         public GameObject RotationOrigin;
 
+
     }
    
     public List<DoorGet> UseDoors = new List<DoorGet>();
@@ -26,10 +27,7 @@ public class Door : MonoBehaviour
 
    public bool door_in_use;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        MoveMyDoor();
-    }
+
 
     public void MoveMyDoor()
     {
@@ -78,12 +76,14 @@ public class Door : MonoBehaviour
         public void ActionDoor()
         {
 
-            foreach (var door in UseDoors)
-            {
-           
-                door.Door.GetComponent<Door>().MoveMyDoor();
 
-            }
+
+        foreach (var door in UseDoors)
+        {
+           
+            door.Door.GetComponent<Door>().MoveMyDoor();
+
+        }
 
 
         } 
