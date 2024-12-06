@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - door
+  - button f2
+  - button f6
+  - button f1
+  - button f5
+  - button f3
+  - button f4
   layers:
   - Default
   - TransparentFX
@@ -38,6 +45,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: textoTutorial
+    uniqueID: 3177576577
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

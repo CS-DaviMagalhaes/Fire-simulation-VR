@@ -8,35 +8,54 @@ public class TutorialSequence : MonoBehaviour
     public TMPro.TextMeshProUGUI tutorialText; // Campo para mostrar el texto del tutorial
     public bool fireExtinguished; // Esta variable será actualizada por otro script
 
-    private bool hasMovedWithLeftJoystick = false;
-    private bool hasMovedWithRightJoystick = false;
+    private bool hasLookedAround = false;
+    private bool hasMovedAround = false;
     private bool hasGrabbedExtinguisher = false;
     private bool hasUsedExtinguisher = false;
     private bool hasExitedBuilding = false;
+
+    public GameObject fireObject;  
+    private Fire fireScript;       
+
+
+    private float movementTime = 0f; // Para verificar si el usuario ha movido por lo menos por un tiempo
+    private const float requiredTime = 1.8f;  // tiempo para validar que ha usado el input suficiente
 
     private XRNode leftHand = XRNode.LeftHand;
     private XRNode rightHand = XRNode.RightHand;
 
     private void Start()
     {
-        ShowTutorialText("Mira a tu alrededor utilizando el joystick izquierdo");
+        // Get the Fire script from the assigned GameObject
+        if (fireObject != null)
+        {
+            fireScript = fireObject.GetComponent<Fire>();
+        }
+        else
+        {
+            Debug.LogError("Fire object not assigned!");
+        }
+        ShowTutorialText("Mira a tu alrededor con el joystick izquierdo");
+
     }
 
     private void Update()
     {
-        if (!hasMovedWithLeftJoystick)
+        if (!hasLookedAround)
         {
             if (CheckLeftJoystickMovement())
             {
-                hasMovedWithLeftJoystick = true;
-                ShowTutorialText("Camina hacia el extintor usando los joysticks");
+                hasLookedAround = true;
+                movementTime = 0f;
+                ShowTutorialText("Camina con eljoystick izquierdo");
             }
         }
-        else if (!hasMovedWithRightJoystick)
+        else if (!hasMovedAround)
         {
-            if (CheckRightJoystickMovement())
+            if (CheckLeftJoystickMovement())
             {
-                hasMovedWithRightJoystick = true;
+                hasMovedAround = true;
+                movementTime = 0f; 
                 ShowTutorialText("Agarra el extintor utilizando el trigger izquierdo secundario");
             }
         }
@@ -45,6 +64,7 @@ public class TutorialSequence : MonoBehaviour
             if (CheckGrabbedObject())
             {
                 hasGrabbedExtinguisher = true;
+                movementTime = 0f; 
                 ShowTutorialText("Usa el extintor presionando el trigger principal derecho");
             }
         }
@@ -58,7 +78,7 @@ public class TutorialSequence : MonoBehaviour
         }
         else if (!fireExtinguished)
         {
-            if (fireExtinguished)
+            if (fireScript.fireExtinguished)
             {
                 ShowTutorialText("Encuentra la salida del edificio. Guíate de las señales de emergencia");
             }
@@ -79,9 +99,12 @@ public class TutorialSequence : MonoBehaviour
         InputDevice device = InputDevices.GetDeviceAtXRNode(leftHand);
         if (device.TryGetFeatureValue(CommonUsages.primary2DAxis, out leftJoystick))
         {
-            return leftJoystick.magnitude > 0.1f;
+            if (leftJoystick.magnitude > 0.1f)
+            {
+                movementTime += Time.deltaTime; // Incrementar timer
+            }
         }
-        return false;
+        return movementTime >= requiredTime; // Devuelve true si se ha movido lo suficiente
     }
 
     private bool CheckRightJoystickMovement()
@@ -90,9 +113,12 @@ public class TutorialSequence : MonoBehaviour
         InputDevice device = InputDevices.GetDeviceAtXRNode(rightHand);
         if (device.TryGetFeatureValue(CommonUsages.primary2DAxis, out rightJoystick))
         {
-            return rightJoystick.magnitude > 0.1f;
+            if (rightJoystick.magnitude > 0.1f)
+            {
+                movementTime += Time.deltaTime; // Incrementar timer
+            }
         }
-        return false;
+        return movementTime >= requiredTime; // Devuelve true si se ha movido lo suficiente
     }
 
     private bool CheckGrabbedObject()
@@ -101,7 +127,7 @@ public class TutorialSequence : MonoBehaviour
         InputDevice device = InputDevices.GetDeviceAtXRNode(leftHand);
         if (device.TryGetFeatureValue(CommonUsages.grip, out leftGrip))
         {
-            return leftGrip > 0.8f; // Umbral para verificar que el objeto fue agarrado
+            return leftGrip > 0.8f; // Se ha agarrado el objeto
         }
         return false;
     }
