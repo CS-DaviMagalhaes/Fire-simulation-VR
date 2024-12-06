@@ -14,6 +14,10 @@ public class TutorialSequence : MonoBehaviour
     private bool hasUsedExtinguisher = false;
     private bool hasExitedBuilding = false;
 
+    public GameObject fireObject;  
+    private Fire fireScript;       
+
+
     private float movementTime = 0f; // Para verificar si el usuario ha movido por lo menos por un tiempo
     private const float requiredTime = 1.8f;  // tiempo para validar que ha usado el input suficiente
 
@@ -22,7 +26,17 @@ public class TutorialSequence : MonoBehaviour
 
     private void Start()
     {
+        // Get the Fire script from the assigned GameObject
+        if (fireObject != null)
+        {
+            fireScript = fireObject.GetComponent<Fire>();
+        }
+        else
+        {
+            Debug.LogError("Fire object not assigned!");
+        }
         ShowTutorialText("Mira a tu alrededor con el joystick izquierdo");
+
     }
 
     private void Update()
@@ -64,7 +78,7 @@ public class TutorialSequence : MonoBehaviour
         }
         else if (!fireExtinguished)
         {
-            if (fireExtinguished)
+            if (fireScript.fireExtinguished)
             {
                 ShowTutorialText("Encuentra la salida del edificio. Guíate de las señales de emergencia");
             }

@@ -7,6 +7,8 @@ public class Fire : MonoBehaviour
     [SerializeField, Range(0f,1f)] private float currentIntensity = 1.0f;
     public float GetIntensity() => currentIntensity;
 
+    public bool fireExtinguished = false;
+
     private float[] startIntensities = new float[0];
     float nextRegenTime = 0;
     [SerializeField] private float regenDelay = 2.5f;
@@ -49,9 +51,10 @@ public class Fire : MonoBehaviour
 
         ChangeIntensity();
 
-        if (currentIntensity <= 0) 
+        if (currentIntensity <= 0)
         {
             Die();
+            fireExtinguished = true;
             return true;
         }
 

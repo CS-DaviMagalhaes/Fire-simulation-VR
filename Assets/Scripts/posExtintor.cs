@@ -8,7 +8,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class posExtintor : MonoBehaviour
-{
+{   /*
     private XRGrabInteractable grabInteractable;
     //private Grabbable grabInteractable;
     private Rigidbody rb;
