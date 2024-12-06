@@ -8,52 +8,27 @@ using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class posExtintor : MonoBehaviour
-{   /*
-    private XRGrabInteractable grabInteractable;
-    //private Grabbable grabInteractable;
-    private Rigidbody rb;
-    private Collider extintorCollider;
+{
+    public OVRInput.Controller controller;
+    public Collider cd;
 
-    void Start()
+    private void Update()
     {
-        grabInteractable = GetComponent<XRGrabInteractable>();
-        rb = GetComponent<Rigidbody>();
-        extintorCollider = GetComponent<Collider>();
+        if (OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, controller) > 0.1f)
+        {
+            if (cd != null)
+            {
+                cd.enabled = false;
+            }
 
-        grabInteractable.selectEntered.AddListener(OnGrab);
-        grabInteractable.selectExited.AddListener(OnRelease);
+
+        }
+        else
+        { 
+            if (cd == null)
+            {
+                cd.enabled = true;
+            }
+        }
     }
-    private void OnGrab(SelectEnterEventArgs args)
-    {
-        // Acceder al interactorObject en lugar de interactor
-        Transform handTransform = args.interactorObject.transform;
-
-        // Colocar el extintor en la mano del controlador
-        transform.position = handTransform.position;
-        transform.rotation = handTransform.rotation;
-
-        // Desactivar el Collider para evitar problemas de colisiones mientras se sostiene el extintor
-        extintorCollider.enabled = false;
-
-        // Hacer que el Rigidbody sea cinemático para que no se mueva por la física mientras se sostiene
-        rb.isKinematic = true;
-    }
-
-    // Este evento se ejecuta cuando se suelta el extintor
-    private void OnRelease(SelectExitEventArgs args)
-    {
-        // Reactivar el Collider para permitir interacciones físicas
-        extintorCollider.enabled = true;
-
-        // Hacer que el Rigidbody no sea cinemático, permitiendo que el extintor caiga por gravedad
-        rb.isKinematic = false;
-    }
-
-    /*
-    void OnDestroy()
-    {
-        grabInteractable.selectEntered.RemoveListener(OnGrab);
-        grabInteractable.selectExited.RemoveListener(OnRelease);
-    }
-    */
 }
